@@ -1,5 +1,6 @@
 document.getElementById('startButton').addEventListener('click', startGame);
 document.getElementById("requestButton").addEventListener("click", requestPermission);
+document.getElementById("calibrateButton").addEventListener("click", calibrate);
 
 const figures = ["square", "line", "cross", "circle", "triangle"];
 let currentFigure = null;
@@ -20,6 +21,10 @@ function startGame() {
     opponentRoundsWon = 0;
 
     startRound();
+}
+
+function calibrate() {
+    window.addEventListener('devicemotion', calibrateAccelerometer, true);
 }
 
 function requestPermission() {
@@ -65,12 +70,39 @@ function startRound() {
     interval = setInterval(updateTimer, 100);
 }
 
+let bias = {x: 0, y: 0, z: 0};
+let isCalibrated = false;
+
+function calibrateAccelerometer(event) {
+    console.error("Calibrating accelerometer")
+
+    if (!isCalibrated) {
+        //wait for the device to be stationary
+        const threshold = 0.05;
+
+        let x = event.acceleration.x;
+        let y = event.acceleration.y;
+        let z = event.acceleration.z;
+
+        if (Math.abs(x) <= threshold && Math.abs(y) <= threshold && Math.abs(z) <= threshold) {
+            console.error("Device is stationary")
+
+            // Capture biases when the device is stationary
+            bias.x = x;
+            bias.y = y;
+            bias.z = z;
+
+            isCalibrated = true;
+        }
+    }
+}
+
 //sensor fusion
 let alpha = 0.98;
 let beta = 1 - alpha;
 
-let accelerometerData = { x: 0, y: 0, z: 0 };
-let gyroscopeData = { x: 0, y: 0, z: 0 };
+let accelerometerData = {x: 0, y: 0, z: 0};
+let gyroscopeData = {x: 0, y: 0, z: 0};
 
 //event throttle
 let lastEventTime = 0;
@@ -85,68 +117,68 @@ function handleMotionEvent(event) {
         return;
     }
 
-    if (currentTime - lastEventTime < throttleInterval) {
-        console.error("Throttling event");
+    if (currentTime - lastEventTime >= throttleInterval) {
+        lastEventTime = currentTime;
 
-        return;
-    }
+        let accelX = event.acceleration.x - bias.x;
+        let accelY = event.acceleration.y - bias.y;
+        let accelZ = event.acceleration.z - bias.z;
 
-    let accelX = event.acceleration.x;
-    let accelY = event.acceleration.y;
-    let accelZ = event.acceleration.z;
+        document.getElementById('acceleration').innerText = `X: ${accelX}, Y: ${accelY}, Z: ${accelZ}`;
 
-    document.getElementById('acceleration').innerText = `X: ${accelX}, Y: ${accelY}, Z: ${accelZ}`;
+        let gyroX = event.rotationRate.alpha;
+        let gyroY = event.rotationRate.beta;
+        let gyroZ = event.rotationRate.gamma;
 
-    let gyroX = event.rotationRate.alpha;
-    let gyroY = event.rotationRate.beta;
-    let gyroZ = event.rotationRate.gamma;
+        accelerometerData = {x: accelX, y: accelY, z: accelZ};
+        gyroscopeData = {x: gyroX, y: gyroY, z: gyroZ};
 
-    accelerometerData = { x: accelX, y: accelY, z: accelZ };
-    gyroscopeData = { x: gyroX, y: gyroY, z: gyroZ };
+        let fusedX = alpha * (accelerometerData.x) + beta * (gyroscopeData.x);
+        let fusedY = alpha * (accelerometerData.y) + beta * (gyroscopeData.y);
+        let fusedZ = alpha * (accelerometerData.z) + beta * (gyroscopeData.z);
 
-    let fusedX = alpha * (accelerometerData.x) + beta * (gyroscopeData.x);
-    let fusedY = alpha * (accelerometerData.y) + beta * (gyroscopeData.y);
-    let fusedZ = alpha * (accelerometerData.z) + beta * (gyroscopeData.z);
+        document.getElementById('fused').innerText = `X: ${fusedX}, Y: ${fusedY}, Z: ${fusedZ}`;
 
-    document.getElementById('fused').innerText = `X: ${fusedX}, Y: ${fusedY}, Z: ${fusedZ}`;
-
-    // Example logic to detect if the figure is drawn correctly
-    if (currentFigure === "square") {
-        if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
-            document.getElementById('status').innerText = "Correct figure!";
-            playerPoints++;
-        } else {
-            document.getElementById('status').innerText = "Keep moving!";
-        }
-    } else if (currentFigure === "line") {
-        if (Math.abs(fusedX) > 5 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
-            document.getElementById('status').innerText = "OK line!";
-            playerPoints++;
-        } else {
-            document.getElementById('status').innerText = "Naaaah!";
-        }
-    } else if (currentFigure === "cross") {
-        if (Math.abs(accelX) < 1 && Math.abs(accelY) < 1 && Math.abs(accelZ) > 5) {
-            document.getElementById('status').innerText = "Correct figure!";
-            playerPoints++;
-        } else {
-            document.getElementById('status').innerText = "Keep moving!";
-        }
-    } else if (currentFigure === "circle") {
-        if (Math.abs(fusedX) < 1 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
-            document.getElementById('status').innerText = "Correct figure!";
-            playerPoints++;
-        } else {
-            document.getElementById('status').innerText = "Keep moving!";
-        }
-    } else if (currentFigure === "triangle") {
-        if (Math.abs(fusedX) > 5 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
-            document.getElementById('status').innerText = "Correct figure!";
-            playerPoints++;
-        } else {
-            document.getElementById('status').innerText = "Keep moving!";
+        // Example logic to detect if the figure is drawn correctly
+        if (currentFigure === "square") {
+            if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
+                document.getElementById('status').innerText = "Correct figure!";
+                playerPoints++;
+            } else {
+                document.getElementById('status').innerText = "Keep moving!";
+            }
+        } else if (currentFigure === "line") {
+            if (Math.abs(fusedX) > 5 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
+                document.getElementById('status').innerText = "OK line!";
+                playerPoints++;
+            } else {
+                document.getElementById('status').innerText = "Naaaah!";
+            }
+        } else if (currentFigure === "cross") {
+            if (Math.abs(accelX) < 1 && Math.abs(accelY) < 1 && Math.abs(accelZ) > 5) {
+                document.getElementById('status').innerText = "Correct figure!";
+                playerPoints++;
+            } else {
+                document.getElementById('status').innerText = "Keep moving!";
+            }
+        } else if (currentFigure === "circle") {
+            if (Math.abs(fusedX) < 1 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
+                document.getElementById('status').innerText = "Correct figure!";
+                playerPoints++;
+            } else {
+                document.getElementById('status').innerText = "Keep moving!";
+            }
+        } else if (currentFigure === "triangle") {
+            if (Math.abs(fusedX) > 5 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
+                document.getElementById('status').innerText = "Correct figure!";
+                playerPoints++;
+            } else {
+                document.getElementById('status').innerText = "Keep moving!";
+            }
         }
     }
+
+    console.error("Throttling event");
 }
 
 function calculatePoints(timeTaken) {
