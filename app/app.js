@@ -1,4 +1,5 @@
 document.getElementById('startButton').addEventListener('click', startGame);
+document.getElementById("requestButton").addEventListener("click", requestPermission);
 
 const figures = ["square", "line", "cross", "circle", "triangle"];
 let currentFigure = null;
@@ -17,7 +18,26 @@ function startGame() {
     opponentPoints = 0;
     playerRoundsWon = 0;
     opponentRoundsWon = 0;
+
     startRound();
+}
+
+function requestPermission() {
+    if (typeof (DeviceMotionEvent) !== "undefined" && typeof (DeviceMotionEvent.requestPermission) === "function") {
+        // (optional) Do something before API request prompt.
+        DeviceMotionEvent.requestPermission()
+            .then(response => {
+                // (optional) Do something after API prompt dismissed.
+                if (response === "granted") {
+                    window.addEventListener('devicemotion', handleMotionEvent, true);
+                } else {
+                    console.error("Permission denied: " + response)
+                }
+            })
+            .catch(console.error)
+    } else {
+        alert("DeviceMotionEvent is not defined");
+    }
 }
 
 function startRound() {
@@ -47,10 +67,14 @@ function startRound() {
 function handleMotionEvent(event) {
     let currentTime = Date.now();
     if (currentTime > endTime) {
+        console.log("Time's up!")
+
         window.removeEventListener('devicemotion', handleMotionEvent, true);
         clearInterval(interval);
         calculatePoints(currentTime - startTime);
         return;
+    } else {
+        console.log("Event received: " + event);
     }
 
     //get acceleration values with gravity
