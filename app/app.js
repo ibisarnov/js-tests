@@ -46,7 +46,8 @@ function startRound() {
         return;
     }
     round++;
-    currentFigure = figures[Math.floor(Math.random() * figures.length)];
+    // currentFigure = figures[Math.floor(Math.random() * figures.length)];
+    currentFigure = 'line';
     document.getElementById('figure').innerText = `Draw this figure: ${currentFigure}`;
     document.getElementById('status').innerText = "Start moving your phone!";
     startTime = Date.now();
@@ -85,7 +86,7 @@ function handleMotionEvent(event) {
     }
 
     if (currentTime - lastEventTime < throttleInterval) {
-        console.log("Throttling event");
+        console.error("Throttling event");
 
         return;
     }
@@ -114,9 +115,9 @@ function handleMotionEvent(event) {
         }
     } else if (currentFigure === "line") {
         if (Math.abs(fusedX) > 5 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
-            document.getElementById('status').innerText = "Correct figure!";
+            document.getElementById('status').innerText = "OK line!";
         } else {
-            document.getElementById('status').innerText = "Keep moving!";
+            document.getElementById('status').innerText = "Naaaah!";
         }
     } else if (currentFigure === "cross") {
         if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) > 5) {
