@@ -64,59 +64,64 @@ function startRound() {
     interval = setInterval(updateTimer, 100);
 }
 
+//sensor fusion
+let alpha = 0.98;
+let beta = 1 - alpha;
+
+let accelerometerData = { x: 0, y: 0, z: 0 };
+let gyroscopeData = { x: 0, y: 0, z: 0 };
+
+//event throttle
+let lastEventTime = 0;
+let throttleInterval = 100; // Handle events every 100 ms
+
 function handleMotionEvent(event) {
     let currentTime = Date.now();
     if (currentTime > endTime) {
-        console.log("Time's up!")
-
         window.removeEventListener('devicemotion', handleMotionEvent, true);
         clearInterval(interval);
         calculatePoints(currentTime - startTime);
         return;
-    } else {
-        console.log("Event received: " + event);
     }
 
-    //get acceleration values with gravity
-    let x = event.accelerationIncludingGravity.x;
-    let y = event.accelerationIncludingGravity.y;
-    let z = event.accelerationIncludingGravity.z;
+    if (currentTime - lastEventTime < throttleInterval) {
+        return;
+    }
 
-    console.log("x: " + x + " y: " + y + " z: " + z);
+    let accelX = event.acceleration.x;
+    let accelY = event.acceleration.y;
+    let accelZ = event.acceleration.z;
 
-    //get rotation values
-    let xRotation = event.rotationRate.alpha;
-    let yRotation = event.rotationRate.beta;
-    let zRotation = event.rotationRate.gamma;
+    let gyroX = event.rotationRate.alpha;
+    let gyroY = event.rotationRate.beta;
+    let gyroZ = event.rotationRate.gamma;
 
-    console.log("xRotation: " + xRotation + " yRotation: " + yRotation + " zRotation: " + zRotation);
+    accelerometerData = { x: accelX, y: accelY, z: accelZ };
+    gyroscopeData = { x: gyroX, y: gyroY, z: gyroZ };
 
-    //get acceleration values
-    let xWithGravity = event.acceleration.x;
-    let yWithGravity = event.acceleration.y;
-    let zWithGravity = event.acceleration.z;
-
-    console.log("xWithGravity: " + xWithGravity + " yWithGravity: " + yWithGravity + " zWithGravity: " + zWithGravity);
+    let fusedX = alpha * (accelerometerData.x) + beta * (gyroscopeData.x);
+    let fusedY = alpha * (accelerometerData.y) + beta * (gyroscopeData.y);
+    let fusedZ = alpha * (accelerometerData.z) + beta * (gyroscopeData.z);
 
     // Example logic to detect if the figure is drawn correctly
     if (currentFigure === "square") {
-        if (Math.abs(x) < 1 && Math.abs(y) < 1 && Math.abs(z) < 1) {
+        if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
         }
     } else if (currentFigure === "line") {
-        if (Math.abs(x) > 5 && Math.abs(y) < 1 && Math.abs(z) < 1) {
+        if (Math.abs(fusedX) > 5 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
         }
     } else if (currentFigure === "cross") {
-        if (Math.abs(x) < 1 && Math.abs(y) < 1 && Math.abs(z) > 5) {
+        if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) > 5) {
             document.getElementById('status').innerText = "Correct figure!";
         }
     } else if (currentFigure === "circle") {
-        if (Math.abs(x) < 1 && Math.abs(y) > 5 && Math.abs(z) < 1) {
+        if (Math.abs(fusedX) < 1 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
         }
     } else if (currentFigure === "triangle") {
-        if (Math.abs(x) > 5 && Math.abs(y) > 5 && Math.abs(z) < 1) {
+        if (Math.abs(fusedX) > 5 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
         }
     }
