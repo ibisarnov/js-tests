@@ -35,6 +35,7 @@ function requestPermission() {
                 // (optional) Do something after API prompt dismissed.
                 if (response === "granted") {
                     window.addEventListener('devicemotion', handleMotionEvent, true);
+                    window.addEventListener('devicemotion', calibrateAccelerometer, true);
                 } else {
                     console.error("Permission denied: " + response)
                 }
@@ -78,7 +79,7 @@ function calibrateAccelerometer(event) {
 
     if (!isCalibrated) {
         //wait for the device to be stationary
-        const threshold = 0.05;
+        const threshold = 0.1;
 
         let x = event.acceleration.x;
         let y = event.acceleration.y;
