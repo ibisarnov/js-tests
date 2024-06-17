@@ -122,7 +122,7 @@ function handleMotionEvent(event) {
             document.getElementById('status').innerText = "Naaaah!";
         }
     } else if (currentFigure === "cross") {
-        if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) > 5) {
+        if (Math.abs(accelX) < 1 && Math.abs(accelY) < 1 && Math.abs(accelZ) > 5) {
             document.getElementById('status').innerText = "Correct figure!";
             playerPoints++;
         } else {
