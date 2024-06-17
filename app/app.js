@@ -95,6 +95,8 @@ function handleMotionEvent(event) {
     let accelY = event.acceleration.y;
     let accelZ = event.acceleration.z;
 
+    document.getElementById('acceleration').innerText = `X: ${accelX}, Y: ${accelY}, Z: ${accelZ}`;
+
     let gyroX = event.rotationRate.alpha;
     let gyroY = event.rotationRate.beta;
     let gyroZ = event.rotationRate.gamma;
@@ -105,6 +107,8 @@ function handleMotionEvent(event) {
     let fusedX = alpha * (accelerometerData.x) + beta * (gyroscopeData.x);
     let fusedY = alpha * (accelerometerData.y) + beta * (gyroscopeData.y);
     let fusedZ = alpha * (accelerometerData.z) + beta * (gyroscopeData.z);
+
+    document.getElementById('fused').innerText = `X: ${fusedX}, Y: ${fusedY}, Z: ${fusedZ}`;
 
     // Example logic to detect if the figure is drawn correctly
     if (currentFigure === "square") {
