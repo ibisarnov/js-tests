@@ -85,6 +85,8 @@ function handleMotionEvent(event) {
     }
 
     if (currentTime - lastEventTime < throttleInterval) {
+        console.log("Throttling event");
+
         return;
     }
 
@@ -107,22 +109,32 @@ function handleMotionEvent(event) {
     if (currentFigure === "square") {
         if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
+        } else {
+            document.getElementById('status').innerText = "Keep moving!";
         }
     } else if (currentFigure === "line") {
         if (Math.abs(fusedX) > 5 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
+        } else {
+            document.getElementById('status').innerText = "Keep moving!";
         }
     } else if (currentFigure === "cross") {
         if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) > 5) {
             document.getElementById('status').innerText = "Correct figure!";
+        } else {
+            document.getElementById('status').innerText = "Keep moving!";
         }
     } else if (currentFigure === "circle") {
         if (Math.abs(fusedX) < 1 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
+        } else {
+            document.getElementById('status').innerText = "Keep moving!";
         }
     } else if (currentFigure === "triangle") {
         if (Math.abs(fusedX) > 5 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
+        } else {
+            document.getElementById('status').innerText = "Keep moving!";
         }
     }
 }
