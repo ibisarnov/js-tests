@@ -110,30 +110,35 @@ function handleMotionEvent(event) {
     if (currentFigure === "square") {
         if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
+            playerPoints++;
         } else {
             document.getElementById('status').innerText = "Keep moving!";
         }
     } else if (currentFigure === "line") {
         if (Math.abs(fusedX) > 5 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "OK line!";
+            playerPoints++;
         } else {
             document.getElementById('status').innerText = "Naaaah!";
         }
     } else if (currentFigure === "cross") {
         if (Math.abs(fusedX) < 1 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) > 5) {
             document.getElementById('status').innerText = "Correct figure!";
+            playerPoints++;
         } else {
             document.getElementById('status').innerText = "Keep moving!";
         }
     } else if (currentFigure === "circle") {
         if (Math.abs(fusedX) < 1 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
+            playerPoints++;
         } else {
             document.getElementById('status').innerText = "Keep moving!";
         }
     } else if (currentFigure === "triangle") {
         if (Math.abs(fusedX) > 5 && Math.abs(fusedY) > 5 && Math.abs(fusedZ) < 1) {
             document.getElementById('status').innerText = "Correct figure!";
+            playerPoints++;
         } else {
             document.getElementById('status').innerText = "Keep moving!";
         }
@@ -141,18 +146,20 @@ function handleMotionEvent(event) {
 }
 
 function calculatePoints(timeTaken) {
-    let basePoints = 1000; // Base points for a correct figure
-    let timeBonus = Math.max(0, 1000 - timeTaken); // Faster completion gives higher bonus
-
-    // Example logic to add points based on time taken to complete the figure
-    if (currentFigure === "square" || currentFigure === "circle") {
-        playerPoints += basePoints + timeBonus;
-    } else {
-        playerPoints += basePoints + (timeBonus / 2); // Lines and crosses have a smaller bonus
-    }
+    // let basePoints = 1000; // Base points for a correct figure
+    // let timeBonus = Math.max(0, 1000 - timeTaken); // Faster completion gives higher bonus
+    //
+    // // Example logic to add points based on time taken to complete the figure
+    // if (currentFigure === "square" || currentFigure === "circle") {
+    //     playerPoints += basePoints + timeBonus;
+    // } else {
+    //     playerPoints += basePoints + (timeBonus / 2); // Lines and crosses have a smaller bonus
+    // }
 
     // Simulate opponent's points for the round
-    opponentPoints = Math.floor(Math.random() * 2000);
+    opponentPoints = Math.floor(Math.random() * 10);
+
+    console.error(`Player points: ${playerPoints}, Opponent points: ${opponentPoints}`)
 
     if (playerPoints > opponentPoints) {
         playerRoundsWon++;
