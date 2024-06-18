@@ -75,9 +75,8 @@ let bias = {x: 0, y: 0, z: 0};
 let isCalibrated = false;
 
 function calibrateAccelerometer(event) {
-    console.error("Calibrating accelerometer")
-
     if (!isCalibrated) {
+        console.error("Calibrating accelerometer")
         //wait for the device to be stationary
         const threshold = 0.1;
 
@@ -149,7 +148,7 @@ function handleMotionEvent(event) {
                 document.getElementById('status').innerText = "Keep moving!";
             }
         } else if (currentFigure === "line") {
-            if (Math.abs(fusedX) > 5 && Math.abs(fusedY) < 1 && Math.abs(fusedZ) < 1) {
+            if (Math.abs(accelX) > 5 && Math.abs(accelY) < 1 && Math.abs(accelZ) < 1) {
                 document.getElementById('status').innerText = "OK line!";
                 playerPoints++;
             } else {
