@@ -93,6 +93,10 @@ function calibrateAccelerometer(event) {
             bias.z = z;
 
             isCalibrated = true;
+
+            window.removeEventListener('devicemotion', calibrateAccelerometer, true);
+
+            console.error("Calibration done : ", bias);
         }
     }
 }
@@ -112,6 +116,7 @@ function handleMotionEvent(event) {
     let currentTime = Date.now();
     if (currentTime > endTime) {
         window.removeEventListener('devicemotion', handleMotionEvent, true);
+        window.removeEventListener('devicemotion', calibrateAccelerometer, true);
         clearInterval(interval);
         calculatePoints(currentTime - startTime);
         return;
@@ -120,9 +125,13 @@ function handleMotionEvent(event) {
     if (currentTime - lastEventTime >= throttleInterval) {
         lastEventTime = currentTime;
 
-        let accelX = event.acceleration.x - bias.x;
-        let accelY = event.acceleration.y - bias.y;
-        let accelZ = event.acceleration.z - bias.z;
+        // let accelX = event.acceleration.x - bias.x;
+        // let accelY = event.acceleration.y - bias.y;
+        // let accelZ = event.acceleration.z - bias.z;
+
+        let accelX = event.acceleration.x;
+        let accelY = event.acceleration.y;
+        let accelZ = event.acceleration.z;
 
         document.getElementById('acceleration').innerText = `X: ${accelX}, Y: ${accelY}, Z: ${accelZ}`;
 
