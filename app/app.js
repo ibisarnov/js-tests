@@ -35,7 +35,7 @@ function requestPermission() {
                 // (optional) Do something after API prompt dismissed.
                 if (response === "granted") {
                     window.addEventListener('devicemotion', handleMotionEvent, true);
-                    // window.addEventListener('devicemotion', calibrateAccelerometer, true);
+                    window.addEventListener('devicemotion', calibrateAccelerometer, true);
                 } else {
                     console.error("Permission denied: " + response)
                 }
@@ -86,7 +86,6 @@ function calibrateAccelerometer(event) {
 
         if (Math.abs(x) <= threshold && Math.abs(y) <= threshold && Math.abs(z) <= threshold) {
             console.error("Device is stationary")
-            console.error("Calibration data : ", bias);
 
             // Capture biases when the device is stationary
             bias.x = x;
