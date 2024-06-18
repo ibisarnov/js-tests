@@ -86,6 +86,7 @@ function calibrateAccelerometer(event) {
 
         if (Math.abs(x) <= threshold && Math.abs(y) <= threshold && Math.abs(z) <= threshold) {
             console.error("Device is stationary")
+            console.error("Calibration data : ", bias);
 
             // Capture biases when the device is stationary
             bias.x = x;
