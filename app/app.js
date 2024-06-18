@@ -24,6 +24,7 @@ function startGame() {
 }
 
 function calibrate() {
+    isCalibrated = false;
     window.addEventListener('devicemotion', calibrateAccelerometer, true);
 }
 
