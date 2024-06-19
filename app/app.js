@@ -111,7 +111,7 @@ let gyroscopeData = {x: 0, y: 0, z: 0};
 
 //event throttle
 let lastEventTime = 0;
-let throttleInterval = 100; // Handle events every 100 ms
+let throttleInterval = 1000; // Handle events every 1000 ms
 
 function handleMotionEvent(event) {
     let currentTime = Date.now();
