@@ -107,7 +107,7 @@ let motionData = [];
 let processingInterval = 300; // Process motion data every 300 ms
 
 function trackMotions(event) {
-    const {x, y, z} = event.accelerationIncludingGravity;
+    const {x, y, z} = event.acceleration;
     const timestamp = event.timeStamp;
 
     // Store motion data
