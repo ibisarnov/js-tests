@@ -35,8 +35,7 @@ function requestPermission() {
             .then(response => {
                 // (optional) Do something after API prompt dismissed.
                 if (response === "granted") {
-                    window.addEventListener('devicemotion', handleMotionEvent, true);
-                    window.addEventListener('devicemotion', calibrateAccelerometer, true);
+                    window.addEventListener('devicemotion', trackMotions, true);
                 } else {
                     console.error("Permission denied: " + response)
                 }
@@ -58,7 +57,7 @@ function startRound() {
     document.getElementById('figure').innerText = `Draw this figure: ${currentFigure}`;
     document.getElementById('status').innerText = "Start moving your phone!";
     startTime = Date.now();
-    endTime = startTime + 10000; // 10 seconds for the round
+    endTime = startTime + 60000; // 60 seconds for the round
     document.getElementById('timeLeft').innerText = 10;
 
     if (window.DeviceMotionEvent) {
@@ -102,6 +101,54 @@ function calibrateAccelerometer(event) {
     }
 }
 
+let motionData = [];
+
+function trackMotions(event) {
+    const {x, y, z} = event.accelerationIncludingGravity;
+    const timestamp = event.timeStamp;
+
+    // Store motion data
+    motionData.push({x, y, z, timestamp});
+
+    // Process motion data for gestures
+    if (motionData.length > 100) {
+        const gesture = detectGesture(motionData);
+        if (gesture) {
+            document.getElementById('gesture').innerText = gesture;
+        } else {
+            document.getElementById('gesture').innerText = ".i.";
+        }
+        motionData = []; // Reset data for next gesture
+    }
+}
+
+function detectGesture(data) {
+    const xMoves = data.map(d => d.x);
+    const yMoves = data.map(d => d.y);
+    const zMoves = data.map(d => d.z);
+
+    const xRange = Math.max(...xMoves) - Math.min(...xMoves);
+    const yRange = Math.max(...yMoves) - Math.min(...yMoves);
+    const zRange = Math.max(...zMoves) - Math.min(...zMoves);
+
+    // Thresholds for detecting gestures
+    const lineThreshold = 1;
+    const circleThreshold = 5;
+    const squareThreshold = 5;
+
+    if (xRange > lineThreshold && yRange < lineThreshold) {
+        return 'Horizontal Line';
+    } else if (yRange > lineThreshold && xRange < lineThreshold) {
+        return 'Vertical Line';
+    } else if (xRange > circleThreshold && yRange > circleThreshold && zRange > circleThreshold) {
+        return 'Circle';
+    } else if (xRange > squareThreshold && yRange > squareThreshold && zRange < lineThreshold) {
+        return 'Square';
+    }
+
+    return null;
+}
+
 //sensor fusion
 let alpha = 0.98;
 let beta = 1 - alpha;
@@ -111,17 +158,18 @@ let gyroscopeData = {x: 0, y: 0, z: 0};
 
 //event throttle
 let lastEventTime = 0;
-let throttleInterval = 1000; // Handle events every 1000 ms
+let throttleInterval = 100; // Handle events every 100 ms
 
 function handleMotionEvent(event) {
     let currentTime = Date.now();
     if (currentTime > endTime) {
         window.removeEventListener('devicemotion', handleMotionEvent, true);
-        window.removeEventListener('devicemotion', calibrateAccelerometer, true);
         clearInterval(interval);
         calculatePoints(currentTime - startTime);
         return;
     }
+
+    let motionData = [];
 
     if (currentTime - lastEventTime >= throttleInterval) {
         lastEventTime = currentTime;
