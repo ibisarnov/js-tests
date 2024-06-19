@@ -105,6 +105,8 @@ function calibrateAccelerometer(event) {
 
 let motionData = [];
 let processingInterval = 300; // Process motion data every 300 ms
+let calibrationData = [];
+let calibrated = false;
 
 function trackMotions(event) {
     const {x, y, z} = event.acceleration;
@@ -115,7 +117,7 @@ function trackMotions(event) {
 
     // Process motion data for gestures
     // if (motionData.length > 0 && Date.now() - motionData[0].timestamp > processingInterval) {
-    if (motionData.length > 100) {
+    if (motionData.length > 100 && calibrated) {
         const gesture = detectGesture(motionData);
         if (gesture) {
             document.getElementById('gesture').innerText = gesture;
@@ -124,12 +126,31 @@ function trackMotions(event) {
         }
         motionData = []; // Reset data for next gesture
     }
+
+    // Calibration
+    if (calibrationData.length < 100) {
+        calibrationData.push({x, y, z});
+    } else if (!calibrated) {
+        const xValues = calibrationData.map(d => d.x);
+        const yValues = calibrationData.map(d => d.y);
+        const zValues = calibrationData.map(d => d.z);
+
+        const xMean = xValues.reduce((a, b) => a + b, 0) / xValues.length;
+        const yMean = yValues.reduce((a, b) => a + b, 0) / yValues.length;
+        const zMean = zValues.reduce((a, b) => a + b, 0) / zValues.length;
+
+        bias = {x: xMean, y: yMean, z: zMean};
+        calibrated = true;
+        console.error("Calibrated: ", bias);
+    }
+
 }
 
 function detectGesture(data) {
-    const xMoves = data.map(d => d.x);
-    const yMoves = data.map(d => d.y);
-    const zMoves = data.map(d => d.z);
+    // Calculate ranges for x, y, z and apply bias
+    const xMoves = data.map(d => d.x).map(x => x - bias.x);
+    const yMoves = data.map(d => d.y).map(y => y - bias.y);
+    const zMoves = data.map(d => d.z).map(z => z - bias.z);
 
     const xRange = Math.max(...xMoves) - Math.min(...xMoves);
     const yRange = Math.max(...yMoves) - Math.min(...yMoves);
