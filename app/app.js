@@ -112,7 +112,8 @@ function trackMotions(event) {
     motionData.push({x, y, z, timestamp});
 
     // Process motion data for gestures
-    if (motionData.length > 0 && Date.now() - motionData[0].timestamp > processingInterval) {
+    // if (motionData.length > 0 && Date.now() - motionData[0].timestamp > processingInterval) {
+    if (motionData.length > 100) {
         const gesture = detectGesture(motionData);
         if (gesture) {
             document.getElementById('gesture').innerText = gesture;
@@ -133,9 +134,9 @@ function detectGesture(data) {
     const zRange = Math.max(...zMoves) - Math.min(...zMoves);
 
     // Thresholds for detecting gestures
-    const lineThreshold = 10;
-    const circleThreshold = 15;
-    const squareThreshold = 15;
+    const lineThreshold = 5;
+    const circleThreshold = 10;
+    const squareThreshold = 10;
 
     if (xRange > lineThreshold && yRange < lineThreshold) {
         return 'Horizontal Line';
