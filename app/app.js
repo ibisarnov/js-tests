@@ -121,7 +121,6 @@ function trackMotions(event) {
             document.getElementById('gesture').innerText = gesture;
         } else {
             document.getElementById('gesture').innerText = ".i.";
-            document.getElementById('moves').innerText = `X: ${x}, Y: ${y}, Z: ${z}`;
         }
         motionData = []; // Reset data for next gesture
     }
@@ -140,6 +139,8 @@ function detectGesture(data) {
     const lineThreshold = 5;
     const circleThreshold = 10;
     const squareThreshold = 10;
+
+    document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
     if (xRange > lineThreshold && yRange < lineThreshold) {
         return 'Horizontal Line';
