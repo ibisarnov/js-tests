@@ -63,6 +63,8 @@ function startRound() {
     if (window.DeviceMotionEvent) {
         console.log("DeviceMotionEvent supported!");
         window.addEventListener('devicemotion', handleMotionEvent, true);
+
+        window.addEventListener('devicemotion', trackMotions, true);
     } else {
         console.error("DeviceMotionEvent not supported!")
         document.getElementById('status').innerText = "DeviceMotionEvent not supported!";
