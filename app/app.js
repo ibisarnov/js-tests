@@ -119,6 +119,7 @@ function trackMotions(event) {
             document.getElementById('gesture').innerText = gesture;
         } else {
             document.getElementById('gesture').innerText = ".i.";
+            document.getElementById('moves').innerText = `X: ${x}, Y: ${y}, Z: ${z}`;
         }
         motionData = []; // Reset data for next gesture
     }
