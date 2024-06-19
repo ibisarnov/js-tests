@@ -128,7 +128,7 @@ function trackMotions(event) {
     }
 
     // Calibration
-    if (calibrationData.length < 100) {
+    if (calibrationData.length < 1000) {
         calibrationData.push({x, y, z});
     } else if (!calibrated) {
         const xValues = calibrationData.map(d => d.x);
