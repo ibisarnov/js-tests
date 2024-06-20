@@ -177,7 +177,7 @@ function detectGesture(data) {
 
     if (xRange > lineThreshold && yRange < lineThreshold) {
         horizontalLineCount++;
-        document.getElementById('thresholds').innerText = `X:' ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+        document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Horizontal Line';
     } else if (yRange > lineThreshold && xRange < lineThreshold) {
