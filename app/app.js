@@ -169,7 +169,7 @@ function detectGesture(data) {
     const zRange = Math.max(...zMoves) - Math.min(...zMoves);
 
     // Thresholds for detecting gestures
-    const lineThreshold = 20;
+    const lineThreshold = 45;
     const circleThreshold = 30;
     const squareThreshold = 30;
 
