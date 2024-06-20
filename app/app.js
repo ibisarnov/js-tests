@@ -144,6 +144,7 @@ function trackMotions(event) {
         bias = {x: xMean, y: yMean, z: zMean};
         calibrated = true;
         console.error("Calibrated: ", bias);
+        motionData = []; // Reset data for next gesture
     }
 
 }
