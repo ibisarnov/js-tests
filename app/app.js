@@ -104,7 +104,7 @@ function calibrateAccelerometer(event) {
 }
 
 let motionData = [];
-let processingInterval = 300; // Process motion data every 300 ms
+let processingInterval = 500; // Process motion data every 500 ms
 let calibrationData = [];
 let calibrated = false;
 
@@ -117,7 +117,7 @@ function trackMotions(event) {
 
     // Process motion data for gestures
     // if (motionData.length > 0 && Date.now() - motionData[0].timestamp > processingInterval) {
-    if (motionData.length > 100 && calibrated) {
+    if (motionData.length > 0 && calibrated && Date.now() - motionData[0].timestamp > processingInterval) {
         const gesture = detectGesture(motionData);
         if (gesture) {
             document.getElementById('gesture').innerText = gesture;
