@@ -169,15 +169,15 @@ function detectGesture(data) {
     const zRange = Math.max(...zMoves) - Math.min(...zMoves);
 
     // Thresholds for detecting gestures
-    const lineThreshold = 10;
-    const circleThreshold = 20;
-    const squareThreshold = 20;
+    const lineThreshold = 20;
+    const circleThreshold = 30;
+    const squareThreshold = 30;
 
     document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
     if (xRange > lineThreshold && yRange < lineThreshold) {
         horizontalLineCount++;
-        document.getElementById('thresholds').innerText = 'X:' + xRange + ' Y:' + yRange;
+        document.getElementById('thresholds').innerText = `X:' ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Horizontal Line';
     } else if (yRange > lineThreshold && xRange < lineThreshold) {
