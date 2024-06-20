@@ -142,10 +142,15 @@ function trackMotions(event) {
         bias = {x: xMean, y: yMean, z: zMean};
         calibrated = true;
         console.error("Calibrated: ", bias);
-        motionData = []; // Reset data for next gesture
+        motionData = []; // Reset data after calibration
     }
 
 }
+
+let horizontalLineCount = 0;
+let verticalLineCount = 0;
+let circleCount = 0;
+let squareCount = 0;
 
 function detectGesture(data) {
     // Calculate ranges for x, y, z and apply bias
@@ -162,17 +167,26 @@ function detectGesture(data) {
     const circleThreshold = 10;
     const squareThreshold = 10;
 
-    document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
-
     if (xRange > lineThreshold && yRange < lineThreshold) {
+        horizontalLineCount++;
         return 'Horizontal Line';
     } else if (yRange > lineThreshold && xRange < lineThreshold) {
+        verticalLineCount++;
         return 'Vertical Line';
     } else if (xRange > circleThreshold && yRange > circleThreshold && zRange > circleThreshold) {
+        circleCount++;
         return 'Circle';
     } else if (xRange > squareThreshold && yRange > squareThreshold && zRange < lineThreshold) {
+        squareCount++;
         return 'Square';
     }
+
+    document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+    document.getElementById('counter').innerText =
+        `Horizontal: ${horizontalLineCount}, 
+        Vertical: ${verticalLineCount}, 
+        Circle: ${circleCount}, 
+        Square: ${squareCount}`;
 
     return null;
 }
