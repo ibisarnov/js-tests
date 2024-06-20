@@ -117,7 +117,7 @@ function trackMotions(event) {
 
     // Process motion data for gestures
     // if (motionData.length > 0 && Date.now() - motionData[0].timestamp > processingInterval) {
-    if (motionData.length > 0 && calibrated && Date.now() - motionData[0].timestamp > processingInterval) {
+    if (motionData.length > 0 && calibrated && timestamp - motionData[0].timestamp > processingInterval) {
         const gesture = detectGesture(motionData);
         if (gesture) {
             document.getElementById('gesture').innerText = gesture;
@@ -125,6 +125,8 @@ function trackMotions(event) {
             document.getElementById('gesture').innerText = ".i.";
         }
         motionData = []; // Reset data for next gesture
+    } else {
+        console.error("timestamp - motionData[0].timestamp: ", timestamp - motionData[0].timestamp)
     }
 
     // Calibration
