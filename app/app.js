@@ -125,8 +125,6 @@ function trackMotions(event) {
             document.getElementById('gesture').innerText = ".i.";
         }
         motionData = []; // Reset data for next gesture
-    } else {
-        console.error("timestamp - motionData[0].timestamp: ", timestamp - motionData[0].timestamp)
     }
 
     // Calibration
