@@ -104,7 +104,7 @@ function calibrateAccelerometer(event) {
 }
 
 let motionData = [];
-let processingInterval = 500; // Process motion data every 500 ms
+let processingInterval = 300; // Process motion data every 300 ms
 let calibrationData = [];
 let calibrated = false;
 
@@ -121,6 +121,12 @@ function trackMotions(event) {
         const gesture = detectGesture(motionData);
         if (gesture) {
             document.getElementById('gesture').innerText = gesture;
+
+            document.getElementById('counter').innerText =
+                `Horizontal: ${horizontalLineCount}, 
+                Vertical: ${verticalLineCount}, 
+                Circle: ${circleCount}, 
+                Square: ${squareCount}`;
         } else {
             document.getElementById('gesture').innerText = ".i.";
         }
@@ -167,6 +173,8 @@ function detectGesture(data) {
     const circleThreshold = 10;
     const squareThreshold = 10;
 
+    document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+
     if (xRange > lineThreshold && yRange < lineThreshold) {
         horizontalLineCount++;
         return 'Horizontal Line';
@@ -180,13 +188,6 @@ function detectGesture(data) {
         squareCount++;
         return 'Square';
     }
-
-    document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
-    document.getElementById('counter').innerText =
-        `Horizontal: ${horizontalLineCount}, 
-        Vertical: ${verticalLineCount}, 
-        Circle: ${circleCount}, 
-        Square: ${squareCount}`;
 
     return null;
 }
