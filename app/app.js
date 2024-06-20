@@ -109,7 +109,7 @@ let calibrationData = [];
 let calibrated = false;
 
 function trackMotions(event) {
-    const {x, y, z} = event.acceleration;
+    const {x, y, z} = event.accelerationIncludingGravity;
     const timestamp = event.timeStamp;
 
     // Store motion data
