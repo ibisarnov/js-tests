@@ -173,7 +173,9 @@ function detectGesture(data) {
     const circleThreshold = 35;
     const squareThreshold = 35;
 
-    document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+    if (xRange > 50) {
+        document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+    }
 
     if (xRange > lineThreshold && yRange < xRange / 2 && zRange < lineThreshold) {
         horizontalLineCount++;
