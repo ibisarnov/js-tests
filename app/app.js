@@ -170,24 +170,30 @@ function detectGesture(data) {
 
     // Thresholds for detecting gestures
     const lineThreshold = 45;
-    const circleThreshold = 30;
-    const squareThreshold = 30;
+    const circleThreshold = 45;
+    const squareThreshold = 45;
 
     document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
-    if (xRange > lineThreshold && yRange < lineThreshold) {
+    if (xRange > lineThreshold && yRange < lineThreshold / 2) {
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Horizontal Line';
-    } else if (yRange > lineThreshold && xRange < lineThreshold) {
+    } else if (yRange > lineThreshold && xRange < lineThreshold / 2) {
         verticalLineCount++;
+        document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+
         return 'Vertical Line';
     } else if (xRange > circleThreshold && yRange > circleThreshold && zRange > circleThreshold) {
         circleCount++;
+        document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+
         return 'Circle';
-    } else if (xRange > squareThreshold && yRange > squareThreshold && zRange < lineThreshold) {
+    } else if (xRange > squareThreshold && yRange > squareThreshold && zRange < lineThreshold / 2) {
         squareCount++;
+        document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+
         return 'Square';
     }
 
