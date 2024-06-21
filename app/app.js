@@ -134,7 +134,7 @@ function trackMotions(event) {
     }
 
     // Calibration
-    if (calibrationData.length < 1000) {
+    if (calibrationData.length < 500) {
         calibrationData.push({x, y, z});
     } else if (!calibrated) {
         const xValues = calibrationData.map(d => d.x);
@@ -184,7 +184,7 @@ function detectGesture(data) {
 
         return 'Horizontal Line';
     } else if (yRange > lineThreshold && xRange < yRange * 0.6 && zRange < lineThreshold) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         verticalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
