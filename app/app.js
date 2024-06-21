@@ -175,7 +175,7 @@ function detectGesture(data) {
 
     document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
-    if (xRange > lineThreshold && yRange < xRange / 2 && zRange < xRange / 2) {
+    if (xRange > lineThreshold && yRange < xRange / 2 && zRange < lineThreshold) {
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
@@ -190,12 +190,13 @@ function detectGesture(data) {
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Circle';
-    } else if (xRange > squareThreshold && yRange > squareThreshold && zRange < lineThreshold / 2) {
-        squareCount++;
-        document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
-
-        return 'Square';
     }
+    // else if (xRange > squareThreshold && yRange > squareThreshold && zRange < lineThreshold / 2) {
+    //     squareCount++;
+    //     document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
+    //
+    //     return 'Square';
+    // }
 
     return null;
 }
