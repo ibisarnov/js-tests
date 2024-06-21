@@ -177,13 +177,14 @@ function detectGesture(data) {
         document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
     }
 
-    if (xRange > lineThreshold && yRange < (xRange * 0.60) && zRange < lineThreshold) {
+    if (xRange > lineThreshold && yRange < (xRange * 0.6) && zRange < lineThreshold) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Horizontal Line';
-    } else if (yRange > lineThreshold && xRange < yRange / 2) {
+    } else if (yRange > lineThreshold && xRange < yRange * 0.6 && zRange < lineThreshold) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
         verticalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
