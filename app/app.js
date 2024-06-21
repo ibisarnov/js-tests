@@ -1,5 +1,3 @@
-import {useHapticFeedback} from "@vkruglikov/react-telegram-web-app";
-
 document.getElementById('startButton').addEventListener('click', startGame);
 document.getElementById("requestButton").addEventListener("click", requestPermission);
 document.getElementById("calibrateButton").addEventListener("click", calibrate);
@@ -160,8 +158,6 @@ let verticalLineCount = 0;
 let circleCount = 0;
 let squareCount = 0;
 
-const [impactOccurred, notificationOccurred, selectionChanged] = useHapticFeedback();
-
 function detectGesture(data) {
     // Calculate ranges for x, y, z and apply bias
     const xMoves = data.map(d => d.x).map(x => x - bias.x);
@@ -182,7 +178,7 @@ function detectGesture(data) {
     }
 
     if (xRange > lineThreshold && yRange < xRange / 2 && zRange < lineThreshold) {
-        navigator.vibrate(200);
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
