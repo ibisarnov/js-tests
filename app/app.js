@@ -170,6 +170,7 @@ function detectGesture(data) {
 
     // Thresholds for detecting gestures
     const lineThreshold = 35;
+    const verticalLineThreshold = 30;
     const circleThreshold = 35;
     const squareThreshold = 35;
 
@@ -183,7 +184,7 @@ function detectGesture(data) {
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Horizontal Line';
-    } else if (yRange > lineThreshold && xRange < yRange * 0.6 && zRange < lineThreshold) {
+    } else if (yRange > verticalLineThreshold && xRange < yRange * 0.52 && zRange < lineThreshold) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         verticalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
