@@ -175,12 +175,12 @@ function detectGesture(data) {
 
     document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
-    if (xRange > lineThreshold && yRange < lineThreshold / 2) {
+    if (xRange > lineThreshold && yRange < xRange / 2) {
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Horizontal Line';
-    } else if (yRange > lineThreshold && xRange < lineThreshold / 2) {
+    } else if (yRange > lineThreshold && xRange < yRange / 2) {
         verticalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
