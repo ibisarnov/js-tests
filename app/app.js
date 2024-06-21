@@ -177,7 +177,7 @@ function detectGesture(data) {
         document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
     }
 
-    if (xRange > lineThreshold && yRange < xRange / 2 && zRange < lineThreshold) {
+    if (xRange > lineThreshold && yRange < (xRange * 0.35) && zRange < lineThreshold) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
