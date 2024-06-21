@@ -1,3 +1,5 @@
+import {useHapticFeedback} from "@vkruglikov/react-telegram-web-app";
+
 document.getElementById('startButton').addEventListener('click', startGame);
 document.getElementById("requestButton").addEventListener("click", requestPermission);
 document.getElementById("calibrateButton").addEventListener("click", calibrate);
@@ -36,7 +38,6 @@ function requestPermission() {
                 // (optional) Do something after API prompt dismissed.
                 if (response === "granted") {
                     window.addEventListener('devicemotion', trackMotions, true);
-                    enableVibration();
                 } else {
                     console.error("Permission denied: " + response)
                 }
@@ -44,19 +45,6 @@ function requestPermission() {
             .catch(console.error)
     } else {
         alert("DeviceMotionEvent is not defined");
-    }
-}
-
-// Function to check if Vibration API is supported and inform the user
-function enableVibration() {
-    if ("vibrate" in navigator) {
-        // Inform the user about the feature
-        alert("This application uses the vibration feature to enhance your experience.");
-
-        // Example usage: Vibrate for 200ms
-        navigator.vibrate(200);
-    } else {
-        alert("Vibration API is not supported on your device.");
     }
 }
 
@@ -171,6 +159,8 @@ let horizontalLineCount = 0;
 let verticalLineCount = 0;
 let circleCount = 0;
 let squareCount = 0;
+
+const [impactOccurred, notificationOccurred, selectionChanged] = useHapticFeedback();
 
 function detectGesture(data) {
     // Calculate ranges for x, y, z and apply bias
