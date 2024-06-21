@@ -36,6 +36,7 @@ function requestPermission() {
                 // (optional) Do something after API prompt dismissed.
                 if (response === "granted") {
                     window.addEventListener('devicemotion', trackMotions, true);
+                    enableVibration();
                 } else {
                     console.error("Permission denied: " + response)
                 }
@@ -43,6 +44,19 @@ function requestPermission() {
             .catch(console.error)
     } else {
         alert("DeviceMotionEvent is not defined");
+    }
+}
+
+// Function to check if Vibration API is supported and inform the user
+function enableVibration() {
+    if ("vibrate" in navigator) {
+        // Inform the user about the feature
+        alert("This application uses the vibration feature to enhance your experience.");
+
+        // Example usage: Vibrate for 200ms
+        navigator.vibrate(200);
+    } else {
+        alert("Vibration API is not supported on your device.");
     }
 }
 
@@ -178,6 +192,7 @@ function detectGesture(data) {
     }
 
     if (xRange > lineThreshold && yRange < xRange / 2 && zRange < lineThreshold) {
+        navigator.vibrate(200);
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
