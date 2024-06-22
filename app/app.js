@@ -126,7 +126,8 @@ function trackMotions(event) {
                 `Horizontal: ${horizontalLineCount}, 
                 Vertical: ${verticalLineCount}, 
                 Circle: ${circleCount}, 
-                Square: ${squareCount}`;
+                Square: ${squareCount}
+                Z Line: ${zLineCount}`;
         } else {
             document.getElementById('gesture').innerText = ".i.";
         }
@@ -155,6 +156,7 @@ function trackMotions(event) {
 
 let horizontalLineCount = 0;
 let verticalLineCount = 0;
+let zLineCount = 0;
 let circleCount = 0;
 let squareCount = 0;
 
@@ -174,17 +176,17 @@ function detectGesture(data) {
     const circleThreshold = 35;
     const squareThreshold = 35;
 
-    if (xRange > 50 || yRange > 50) {
+    if (xRange > 50 || yRange > 50 || zRange > 50) {
         document.getElementById('moves').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
     }
 
-    if (xRange > lineThreshold && yRange < (xRange * 0.6) && zRange < lineThreshold) {
+    if (xRange > lineThreshold && yRange < xRange * 0.6 && zRange < lineThreshold) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         horizontalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Horizontal Line';
-    } else if (yRange > verticalLineThreshold && xRange < yRange * 0.52 && zRange < lineThreshold) {
+    } else if (yRange > verticalLineThreshold && xRange < yRange * 0.7 && zRange < lineThreshold) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         verticalLineCount++;
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
@@ -195,6 +197,11 @@ function detectGesture(data) {
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Circle';
+    } else if (zRange > lineThreshold && xRange < lineThreshold && yRange < lineThreshold) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        zLineCount++;
+
+        return 'Z Line';
     }
     // else if (xRange > squareThreshold && yRange > squareThreshold && zRange < lineThreshold / 2) {
     //     squareCount++;
