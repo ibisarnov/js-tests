@@ -126,7 +126,6 @@ function trackMotions(event) {
                 `Horizontal: ${horizontalLineCount}, 
                 Vertical: ${verticalLineCount}, 
                 Circle: ${circleCount}, 
-                Square: ${squareCount}
                 Z Line: ${zLineCount}`;
         } else {
             document.getElementById('gesture').innerText = ".i.";
@@ -173,6 +172,7 @@ function detectGesture(data) {
     // Thresholds for detecting gestures
     const lineThreshold = 35;
     const verticalLineThreshold = 30;
+    const zLLineThreshold = 50;
     const circleThreshold = 35;
     const squareThreshold = 35;
 
@@ -197,7 +197,7 @@ function detectGesture(data) {
         document.getElementById('thresholds').innerText = `X: ${xRange}, Y: ${yRange}, Z: ${zRange}`;
 
         return 'Circle';
-    } else if (zRange > lineThreshold && xRange < lineThreshold && yRange < lineThreshold) {
+    } else if (zRange > zLLineThreshold && xRange < zRange * 0.25 && yRange < zRange * 0.6) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         zLineCount++;
 
